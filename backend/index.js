@@ -7,11 +7,22 @@ const cors = require('cors')
 
 const port=3000;
 
+// const pool = new pg.Pool({
+//     user: 'secadv',
+//     host: 'db',
+//     database: 'pxldb',
+//     password: 'ilovesecurity',
+//     port: 5432,
+//     connectionTimeoutMillis: 5000
+// })
+
+require('dotenv').config();
+
 const pool = new pg.Pool({
-    user: 'secadv',
+    user: process.env.DB_USER,
     host: 'db',
     database: 'pxldb',
-    password: '***REMOVED***',
+    password: process.env.DB_PASSWORD,
     port: 5432,
     connectionTimeoutMillis: 5000
 })
@@ -27,17 +38,17 @@ app.use(
 )
 
 app.get('/authenticate/:username/:password', async (request, response) => {
-    const username = request.params.username;
-    const password = request.params.password;
+  const username = request.params.username;
+  const password = request.params.password;
 
-    const query = `SELECT * FROM users WHERE user_name='${username}' and password='${password}'`;
-    console.log(query);
-    pool.query(query, (error, results) => {
+  // Gebruik parameterized query
+  const query = 'SELECT * FROM users WHERE user_name = $1 AND password = $2';
+  pool.query(query, [username, password], (error, results) => {
       if (error) {
-        throw error
+          throw error;
       }
-      response.status(200).json(results.rows)});
-      
+      response.status(200).json(results.rows);
+  });
 });
 
 app.listen(port, () => {

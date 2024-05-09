@@ -11,7 +11,7 @@ class DatabaseController {
 
   factory DatabaseController._connect() {
 
-    final conn =  PostgreSQLConnection('localhost', 5434, 'pxldb', username: 'secadv', password: '***REMOVED***');
+    final conn =  PostgreSQLConnection('localhost', 5434, 'pxldb', username: 'secadv', password: 'ilovesecurity');
     final wrapper = DatabaseController._fromConnection(conn);
     _finalizer.attach(wrapper, conn, detach: wrapper);
     return wrapper;
